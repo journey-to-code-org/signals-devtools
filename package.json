@@ -1,5 +1,5 @@
 {
-  "name": "signals-playground",
+  "name": "signals-devtools",
   "version": "0.1.0",
   "description": "A framework-neutral DevTools inspector for the TC39 Signals proposal",
   "main": "index.js",
@@ -25,7 +25,7 @@
   "private": "true",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/journey-to-code-org/signals-playground.git"
+    "url": "git+https://github.com/journey-to-code-org/signals-devtools.git"
   },
-  "homepage": "https://journey-to-code-org.github.io/signals-playground/"
+  "homepage": "https://journey-to-code-org.github.io/signals-devtools/"
 }

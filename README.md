@@ -1,8 +1,8 @@
-# Signals Playground
+# Signals DevTools
 
-Tools for seeing the [TC39 Signals proposal](https://github.com/tc39/proposal-signals) at work, built on one inspector core:
+Developer tools for the [TC39 Signals proposal](https://github.com/tc39/proposal-signals), built on one inspector core:
 
-- **[The playground](https://journey-to-code-org.github.io/signals-playground/)**: write code against `Signal` in the browser and watch its dependency graph update as it runs. Nothing to install.
+- **[The playground](https://journey-to-code-org.github.io/signals-devtools/)**: write code against `Signal` in the browser and watch its dependency graph update as it runs. Nothing to install.
 - **Signals Inspector**, a browser extension: a DevTools panel that shows every `Signal.State`, `Signal.Computed` and `Signal.subtle.Watcher` on a page, how they depend on each other, every write, and why each computed last re-ran. It isn't tied to any framework: anything built on the proposal's API can be inspected.
 
 The proposal says built-in Signals should let DevTools inspect the signal graph, "whether this is built into browsers or through a shared extension." The extension is an attempt at that shared extension, and at the small [hook](HOOK.md) that lets a page and a tool find each other.

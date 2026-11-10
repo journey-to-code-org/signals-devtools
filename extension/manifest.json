@@ -4,7 +4,7 @@
   "short_name": "Signals",
   "description": "Inspect TC39 Signals on a page: the dependency graph, every write, and why each computed re-ran. Framework-neutral.",
   "version": "0.1.0",
-  "homepage_url": "https://github.com/journey-to-code-org/signals-playground",
+  "homepage_url": "https://github.com/journey-to-code-org/signals-devtools",
   "devtools_page": "devtools.html",
   "options_ui": {
     "page": "options.html",
