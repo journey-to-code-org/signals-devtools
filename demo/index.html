@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signals Inspector demo</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font: 15px/1.5 system-ui, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 16px; }
+    .card { border: 1px solid #8884; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    button { font: inherit; padding: 4px 12px; }
+    output { font-weight: 700; }
+    .warn { color: #c5221f; }
+  </style>
+</head>
+<body>
+  <h1>Signals Inspector demo</h1>
+  <p id="note">Open DevTools → <b>Signals</b>. This page uses only the TC39 API through <code>globalThis.Signal</code>.</p>
+
+  <section class="card">
+    <h2>Counter</h2>
+    <p>Count: <output id="count"></output> is <output id="parity"></output></p>
+    <button id="inc">+1</button> <button id="add2">+2</button>
+    <p class="muted">“+2” leaves the parity unchanged, so the parity effect doesn't re-run: watch the timeline.</p>
+  </section>
+
+  <section class="card">
+    <h2>Cart</h2>
+    <p><label>Price <input id="price" type="number" value="12" min="0"></label>
+       <label>Qty <input id="qty" type="number" value="1" min="0"></label></p>
+    <p>Subtotal <output id="subtotal"></output>, tax <output id="tax"></output>, total <output id="total"></output></p>
+    <p><button id="bad">Make tax throw</button></p>
+  </section>
+
+  <script type="module">
+    const { Signal } = globalThis;
+    const note = document.getElementById('note');
+    if (!Signal) {
+      note.innerHTML = '<b class="warn">No globalThis.Signal: the inspector isn\'t injected here.</b> Serve this page from localhost with the extension installed.';
+      throw new Error('no Signal');
+    }
+    const name = (signal, label) => globalThis.__SIGNALS_DEVTOOLS_HOOK__?.label(signal, label) ?? signal;
+
+    // A small effect on top of the proposal's Watcher, batched per microtask.
+    let pending = false;
+    const watcher = name(new Signal.subtle.Watcher(() => {
+      if (pending) return;
+      pending = true;
+      queueMicrotask(() => {
+        pending = false;
+        for (const signal of watcher.getPending()) signal.get();
+        watcher.watch();
+      });
+    }), 'effects');
+    function effect(label, fn) {
+      const computed = name(new Signal.Computed(fn), label);
+      watcher.watch(computed);
+      computed.get();
+    }
+    const $ = (id) => document.getElementById(id);
+
+    const count = name(new Signal.State(0), 'count');
+    const isEven = name(new Signal.Computed(() => count.get() % 2 === 0), 'isEven');
+    const parity = name(new Signal.Computed(() => (isEven.get() ? 'even' : 'odd')), 'parity');
+    effect('render count', () => ($('count').textContent = count.get()));
+    effect('render parity', () => ($('parity').textContent = parity.get()));
+    $('inc').onclick = () => count.set(count.get() + 1);
+    $('add2').onclick = () => count.set(count.get() + 2);
+
+    const price = name(new Signal.State(12), 'price');
+    const qty = name(new Signal.State(1), 'qty');
+    const broken = name(new Signal.State(false), 'taxBroken');
+    const subtotal = name(new Signal.Computed(() => price.get() * qty.get()), 'subtotal');
+    const tax = name(new Signal.Computed(() => {
+      if (broken.get()) throw new Error('tax service unavailable');
+      return Math.round(subtotal.get() * 0.06 * 100) / 100;
+    }), 'tax');
+    const total = name(new Signal.Computed(() => subtotal.get() + tax.get()), 'total');
+    const safe = (signal) => { try { return signal.get(); } catch { return '—'; } };
+    effect('render cart', () => {
+      $('subtotal').textContent = subtotal.get();
+      $('tax').textContent = safe(tax);
+      $('total').textContent = safe(total);
+    });
+    $('price').oninput = (e) => price.set(Number(e.target.value));
+    $('qty').oninput = (e) => qty.set(Number(e.target.value));
+    $('bad').onclick = () => broken.set(!broken.get());
+
+    // Created but never read: shows up as "not computed yet", not live.
+    const unused = name(new Signal.Computed(() => count.get() * 100), 'unused');
+
+    // For trying things in the console: demo.count.set(10), demo.unused.get(), ...
+    globalThis.demo = { count, isEven, parity, price, qty, subtotal, tax, total, unused };
+  </script>
+</body>
+</html>

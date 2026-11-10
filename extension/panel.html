@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Signals</title>
+  <link rel="stylesheet" href="panel.css">
+  <script type="module" src="panel.js"></script>
+</head>
+<body>
+  <header class="toolbar">
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-view="list" aria-selected="true">Signals</button>
+      <button role="tab" data-view="graph" aria-selected="false">Graph</button>
+      <button role="tab" data-view="timeline" aria-selected="false">Timeline</button>
+    </nav>
+    <input id="filter" type="search" placeholder="Filter by name, value or file" aria-label="Filter">
+    <label class="toggle" title="Show States"><input type="checkbox" data-kind="state" checked> State</label>
+    <label class="toggle" title="Show Computeds"><input type="checkbox" data-kind="computed" checked> Computed</label>
+    <label class="toggle" title="Show Watchers"><input type="checkbox" data-kind="watcher" checked> Watcher</label>
+    <span class="spacer"></span>
+    <label class="toggle" title="Record a stack trace with every write (slower)"><input type="checkbox" id="stacks"> Write stacks</label>
+    <button id="pause" title="Stop reading the page">Pause</button>
+    <button id="clear" title="Clear the timeline">Clear</button>
+  </header>
+
+  <main>
+    <section id="empty" class="empty" hidden></section>
+    <section id="views">
+      <div id="list" class="view">
+        <table>
+          <thead><tr><th class="k"></th><th>Name</th><th>Value</th><th class="n" title="Writes, or runs for a Computed">Writes / runs</th><th class="n" title="Read by a Watcher">Live</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="graph" class="view" hidden><svg id="graph-svg" role="img" aria-label="Signal dependency graph"></svg></div>
+      <div id="timeline" class="view" hidden><ol></ol></div>
+    </section>
+    <aside id="detail" aria-live="polite"><p class="muted">Select a signal to see its value, what it reads, what reads it, and why it last changed.</p></aside>
+  </main>
+
+  <footer id="status" class="status"></footer>
+</body>
+</html>

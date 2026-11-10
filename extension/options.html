@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signals Inspector options</title>
+  <style>
+    :root { color-scheme: light dark; --line: #d6d9de; --muted: #6a7280; --accent: #1a73e8; }
+    @media (prefers-color-scheme: dark) { :root { --line: #3c4043; --muted: #9aa0a6; --accent: #8ab4f8; } }
+    body { font: 14px/1.5 system-ui, sans-serif; max-width: 640px; margin: 32px auto; padding: 0 16px; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 15px; margin-top: 28px; }
+    p, li { color: inherit; }
+    .muted { color: var(--muted); }
+    code { font: 13px ui-monospace, Menlo, Consolas, monospace; }
+    ul { padding: 0; list-style: none; }
+    li { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); gap: 12px; }
+    form { display: flex; gap: 8px; }
+    input { flex: 1; min-width: 0; font: inherit; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; }
+    button { font: inherit; padding: 4px 12px; border: 1px solid var(--line); border-radius: 4px; background: none; cursor: pointer; }
+    button:hover { border-color: var(--accent); }
+    #message { min-height: 1.5em; }
+  </style>
+</head>
+<body>
+  <h1>Signals Inspector</h1>
+  <p>The inspector puts an instrumented <code>Signal</code> on a page before any of its scripts run. It does that on
+    <code>localhost</code>, <code>*.localhost</code>, <code>127.0.0.1</code> and <code>file://</code> pages
+    (for files, also turn on “Allow access to file URLs” for this extension).</p>
+
+  <h2>Other sites</h2>
+  <p class="muted">Add a site you develop on, like a staging server. The browser asks for permission once; reload the page afterwards.</p>
+  <form id="add">
+    <input id="site" type="text" placeholder="https://staging.example.com" aria-label="Site to inspect" required>
+    <button type="submit">Add</button>
+  </form>
+  <p id="message" role="status"></p>
+  <ul id="sites"></ul>
+  <script src="options.js"></script>
+</body>
+</html>
