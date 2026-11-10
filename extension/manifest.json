@@ -4,13 +4,18 @@
   "short_name": "Signals",
   "description": "Inspect TC39 Signals on a page: the dependency graph, every write, and why each computed re-ran. Framework-neutral.",
   "version": "0.1.0",
+  "homepage_url": "https://github.com/journey-to-code-org/signals-playground",
   "devtools_page": "devtools.html",
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
-  "permissions": ["scripting"],
-  "optional_host_permissions": ["<all_urls>"],
+  "permissions": [
+    "scripting"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -22,7 +27,9 @@
         "https://*.localhost/*",
         "file:///*"
       ],
-      "js": ["hook.js"],
+      "js": [
+        "hook.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN",
       "all_frames": true
@@ -39,7 +46,9 @@
       "id": "signals-inspector@journeytocode.io",
       "strict_min_version": "128.0",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     }
   }
