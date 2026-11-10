@@ -125,17 +125,7 @@ code { font-family: var(--font-mono); font-size: 0.95em; }
   gap: 8px;
   white-space: nowrap;
 }
-.brand-mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  background:
-    radial-gradient(circle at 30% 32%, var(--state) 0 3.5px, transparent 4px),
-    radial-gradient(circle at 30% 70%, var(--state) 0 3.5px, transparent 4px),
-    radial-gradient(circle at 72% 50%, var(--computed) 0 4.5px, transparent 5px),
-    var(--surface);
-  border: 1px solid var(--line);
-}
+.brand-mark { width: 22px; height: 22px; display: block; }
 
 button {
   border: 1px solid var(--line);

@@ -17,7 +17,12 @@ const js = result.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
 const css = readFileSync('playground/playground.css', 'utf8');
 const cmCss = readFileSync('node_modules/codemirror/lib/codemirror.css', 'utf8');
 
+// The extension's icon, inlined so the page stays one file.
+const icon = (size) => `data:image/png;base64,${readFileSync(`extension/icons/icon-${size}.png`).toString('base64')}`;
+
 const page = readFileSync('playground/page.html', 'utf8')
+  .replaceAll('/*ICON_32*/', icon(32))
+  .replaceAll('/*ICON_128*/', icon(128))
   .replace('/*CODEMIRROR_CSS*/', () => cmCss)
   .replace('/*PLAYGROUND_CSS*/', () => css)
   .replace('/*PLAYGROUND_JS*/', () => js);
