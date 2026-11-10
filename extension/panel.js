@@ -195,7 +195,7 @@ function renderTimeline() {
       ),
     );
   }
-  if (!items.length) items.push(h('li', { class: 'event muted' }, 'Nothing has happened yet. Writes, runs and notifications appear here as they happen.'));
+  if (!items.length) items.push(h('li', { class: 'muted', style: 'padding:8px 10px' }, 'Nothing has happened yet. Writes, runs and notifications appear here as they happen.'));
   $('#timeline ol').replaceChildren(...items);
 }
 

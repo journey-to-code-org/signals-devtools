@@ -10,7 +10,8 @@
     "test:browser": "node test/browser.mjs",
     "demo": "node scripts/serve.js",
     "build:playground": "node scripts/build-playground.js",
-    "test:playground": "node test/playground.mjs"
+    "test:playground": "node test/playground.mjs",
+    "test:together": "node test/together.mjs"
   },
   "keywords": [],
   "author": "",

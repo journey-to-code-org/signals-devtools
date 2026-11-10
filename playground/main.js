@@ -126,7 +126,16 @@ function compile(code) {
 }
 
 function createSession() {
-  const { Signal, hook } = createInspector(Polyfill, { base: 'polyfill' });
+  // With the Signals Inspector extension on this page, build on its instrumented Signal, so its
+  // DevTools panel sees what the playground does too (and looks past the playground's own code).
+  const pageHook = globalThis.__SIGNALS_DEVTOOLS_HOOK__;
+  const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  pageHook?.ignoreFrames?.(`^${escape(location.origin + location.pathname)}`);
+  const { Signal, hook } = createInspector(pageHook?.Signal ?? Polyfill, { base: pageHook ? 'extension' : 'polyfill' });
+  const label = (signal, name) => {
+    pageHook?.label?.(signal, name);
+    return hook.label(signal, name);
+  };
   const timers = new Set();
   const stage = $('#stage');
   stage.replaceChildren();
@@ -140,7 +149,7 @@ function createSession() {
 
   // effect(): one Watcher, re-reading what went dirty once per microtask.
   let queued = false;
-  const watcher = hook.label(
+  const watcher = label(
     new Signal.subtle.Watcher(() => {
       if (queued) return;
       queued = true;
@@ -167,7 +176,7 @@ function createSession() {
       if (typeof cleanup === 'function') cleanup();
       cleanup = fn();
     });
-    if (name) hook.label(computed, name);
+    if (name) label(computed, name);
     watcher.watch(computed);
     try {
       computed.get();
