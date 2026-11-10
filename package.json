@@ -8,12 +8,15 @@
     "build": "node scripts/build.js",
     "icons": "python3 scripts/icons.py extension/icons",
     "test:browser": "node test/browser.mjs",
-    "demo": "node scripts/serve.js"
+    "demo": "node scripts/serve.js",
+    "build:playground": "node scripts/build-playground.js",
+    "test:playground": "node test/playground.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "codemirror": "^5.65.16",
     "esbuild": "^0.28.2",
     "playwright": "^1.65.0",
     "signal-polyfill": "^0.2.2"

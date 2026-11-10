@@ -1,0 +1,87 @@
+<title>Signals Playground</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Write code against the TC39 Signals proposal and watch the graph update as it runs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>/*CODEMIRROR_CSS*/</style>
+<style>/*PLAYGROUND_CSS*/</style>
+
+<div class="app">
+  <header class="bar">
+    <h1 class="brand"><span class="brand-mark" aria-hidden="true"></span>Signals Playground</h1>
+    <label class="field" for="example">
+      <span class="sr">Example</span>
+      <select id="example"></select>
+    </label>
+    <button id="run" class="primary" type="button" title="Run (Ctrl/⌘ + Enter)">Run</button>
+    <label class="check" for="autorun"><input id="autorun" type="checkbox" checked> Run as I type</label>
+    <span class="grow"></span>
+    <details class="api" id="api">
+      <summary>API</summary>
+      <div class="api-body">
+        <p>Your code runs with the proposal's <code>Signal</code> (the reference polyfill) and these helpers:</p>
+        <dl>
+          <dt><code>new Signal.State(v, { name })</code></dt><dd>A value you set. <code>name</code> labels it in the graph.</dd>
+          <dt><code>new Signal.Computed(fn, { name })</code></dt><dd>A value derived from what <code>fn</code> reads.</dd>
+          <dt><code>effect(fn, name?)</code></dt><dd>Runs <code>fn</code> now and again after anything it read changes, batched per microtask. Returns a stop function.</dd>
+          <dt><code>log(...values)</code></dt><dd>Writes to the console below the editor.</dd>
+          <dt><code>ui.button(label, fn)</code></dt><dd>A button.</dd>
+          <dt><code>ui.slider(label, state, { min, max, step })</code></dt><dd>A slider bound to a number State.</dd>
+          <dt><code>ui.text(label, state)</code> · <code>ui.toggle(label, state)</code></dt><dd>A text field or a checkbox bound to a State.</dd>
+          <dt><code>ui.show(label, signal)</code></dt><dd>Shows a signal's value, kept up to date.</dd>
+          <dt><code>setTimeout</code> · <code>setInterval</code></dt><dd>Stopped when the code runs again.</dd>
+        </dl>
+        <p>Select a node to set its value, see what it reads, and why it last re-ran.</p>
+      </div>
+    </details>
+    <button id="share" type="button">Share</button>
+    <a class="link" href="https://github.com/tc39/proposal-signals" target="_blank" rel="noopener">Proposal ↗</a>
+  </header>
+
+  <section class="code" aria-label="Code">
+    <div class="editor-wrap"><textarea id="source" spellcheck="false" aria-label="Code"></textarea></div>
+    <section class="stage" aria-label="Your page">
+      <h2 class="label">Page</h2>
+      <div id="stage" class="stage-body"></div>
+    </section>
+    <section class="console" aria-label="Console">
+      <h2 class="label">Console <button id="clear-console" class="mini" type="button">Clear</button></h2>
+      <ol id="console" class="console-body"></ol>
+    </section>
+  </section>
+
+  <section class="inspect" aria-label="Inspector">
+    <nav class="tabs" role="tablist" aria-label="Views">
+      <button role="tab" id="tab-graph" data-view="graph" aria-selected="true">Graph</button>
+      <button role="tab" id="tab-table" data-view="table" aria-selected="false">Signals</button>
+      <button role="tab" id="tab-timeline" data-view="timeline" aria-selected="false">Timeline</button>
+      <span class="grow"></span>
+      <label class="check legend-check" for="helpers" title="Show the effects that ui.slider, ui.show and friends create"><input id="helpers" type="checkbox"> ui effects</label>
+      <span class="legend" aria-label="Legend">
+        <span><i class="sw state"></i>State</span>
+        <span><i class="sw computed"></i>Computed</span>
+        <span><i class="sw watcher"></i>Watcher</span>
+        <span><i class="sw dashed"></i>not watched</span>
+      </span>
+    </nav>
+    <div class="views">
+      <div id="graph" class="view graph-view"><svg id="graph-svg" role="img" aria-label="Signal dependency graph"></svg></div>
+      <div id="table" class="view" hidden>
+        <table>
+          <thead><tr><th class="k"><span class="sr">Kind</span></th><th>Name</th><th>Value</th><th class="n">Writes / runs</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="timeline" class="view" hidden><ol class="events"></ol></div>
+    </div>
+    <aside id="detail" class="detail" aria-live="polite"></aside>
+    <footer id="status" class="status"></footer>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<script>/*PLAYGROUND_JS*/</script>

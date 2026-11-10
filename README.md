@@ -35,11 +35,22 @@ npm run demo         # http://127.0.0.1:4173/demo/
 
 Load `extension/` as an unpacked extension (Chrome or Edge: `chrome://extensions`, Developer mode, Load unpacked; Firefox 128+: `about:debugging`, Load Temporary Add-on, pick `extension/manifest.json`). Open the demo, open DevTools, and pick the **Signals** panel.
 
+## Playground
+
+`playground/` is a page for trying the proposal with nothing installed: write code against `Signal`, and the same inspector core draws its graph as it runs. A write sends a pulse along each edge whose source made the next node re-run, so equality cut-off, glitch-free diamonds, laziness and dynamic dependencies are visible rather than described. It ships with examples for each, and Share puts the code in the link.
+
+```sh
+npm run build:playground   # dist/playground/index.html, one self-contained file
+```
+
+The `Playground` workflow deploys it to GitHub Pages on every push to `main`.
+
 ## Tests
 
 ```sh
 npm test                 # the page hook and the panel's model, in Node
 npm run test:browser     # loads the extension in Chromium and drives the demo and the panel
+npm run test:playground  # runs every playground example in Chromium (build it first)
 ```
 
 `test:browser` needs a Chromium that can load unpacked extensions (Chrome for Testing or Chromium; branded Chrome can't). Point `CHROME` at it if Playwright's own isn't installed.
@@ -50,6 +61,7 @@ npm run test:browser     # loads the extension in Chromium and drives the demo a
 - `src/hook.js`: the content script entry, bundled with the polyfill into `extension/hook.js`.
 - `extension/`: the manifest, the DevTools panel (`panel.*`, `model.js`) and the options page.
 - `demo/`: a page that uses only `globalThis.Signal`.
+- `playground/`: the playground (`main.js`, `examples.js`), built by `scripts/build-playground.js`.
 
 ## Status
 
