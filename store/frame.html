@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Store screenshot frame</title>
+<style>
+  /* A browser window with DevTools docked at the bottom, for store screenshots: the page on top
+     and the real panel.html below, fed from that page by store/shoot.mjs. */
+  :root { --chrome: #dee1e6; --tab: #ffffff; --ink: #1f1f1f; --muted: #5f6368; --line: #c4c7c5; --dt: #f3f3f3; --dt-ink: #333; --dt-sel: #1a73e8; }
+  :root.dark { --chrome: #202124; --tab: #35363a; --ink: #e8eaed; --muted: #9aa0a6; --line: #3c4043; --dt: #292a2d; --dt-ink: #e3e3e3; --dt-sel: #8ab4f8; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { display: grid; grid-template-rows: 34px 36px var(--page, 300px) 30px 1fr; background: var(--chrome); color: var(--ink); font: 12px/1 Inter, system-ui, sans-serif; }
+  .tabs { display: flex; align-items: flex-end; padding: 0 10px; gap: 6px; }
+  .tab { background: var(--tab); border-radius: 8px 8px 0 0; padding: 9px 14px; display: flex; gap: 8px; align-items: center; min-width: 220px; }
+  .tab img { width: 14px; height: 14px; }
+  .address { display: flex; align-items: center; gap: 10px; padding: 0 12px; background: var(--tab); }
+  .address .url { flex: 1; background: var(--chrome); border-radius: 14px; padding: 7px 14px; color: var(--muted); }
+  .address .url b { color: var(--ink); font-weight: 400; }
+  .dots { display: flex; gap: 14px; color: var(--muted); font-size: 15px; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; background: #fff; }
+  .dt-tabs { display: flex; align-items: stretch; gap: 0; background: var(--dt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--dt-ink); padding-left: 8px; }
+  .dt-tabs span { padding: 0 11px; display: flex; align-items: center; }
+  .dt-tabs .on { border-bottom: 2px solid var(--dt-sel); color: var(--dt-sel); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="tabs"><div class="tab"><img src="/extension/icons/icon-32.png" alt=""><span id="title">Signals Inspector demo</span></div></div>
+  <div class="address"><span class="dots">‹ › ⟳</span><span class="url"><b id="host">localhost:5173</b><span id="path">/</span></span></div>
+  <iframe id="app" title="page"></iframe>
+  <div class="dt-tabs"><span>Elements</span><span>Console</span><span>Sources</span><span>Network</span><span>Performance</span><span>Application</span><span class="on">Signals</span></div>
+  <iframe id="panel" title="panel"></iframe>
+</body>
+</html>

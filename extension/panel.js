@@ -17,7 +17,9 @@ const bridge = globalThis.__SIGNALS_PANEL_BRIDGE__ ?? {
     chrome.devtools.network.onNavigated.addListener(fn);
   },
   openResource(url, line) {
-    chrome.devtools.panels.openResource(url, Math.max(0, line - 1), () => {});
+    // Firefox has no openResource: there the link opens the file in a new tab instead.
+    if (chrome.devtools.panels.openResource) chrome.devtools.panels.openResource(url, Math.max(0, line - 1), () => {});
+    else window.open(url, '_blank', 'noopener');
   },
   theme: chrome.devtools?.panels?.themeName,
 };
@@ -151,6 +153,8 @@ function renderAll() {
 
 function render(force = false) {
   if (ui.connected !== true && !force) return;
+  // The graph gets the whole width until something is selected.
+  document.body.classList.toggle('wide', ui.view === 'graph' && ui.selected == null);
   if (ui.view === 'list') renderList();
   if (ui.view === 'graph') renderGraph();
   if (ui.view === 'timeline') renderTimeline();
@@ -281,8 +285,12 @@ function renderGraph() {
     {},
     s('marker', { id: 'arrow', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' }, s('path', { d: 'M0,0 L10,5 L0,10 z', fill: 'var(--edge)' })),
   );
-  svg.setAttribute('width', width + 4);
-  svg.setAttribute('height', height + 4);
+  // Shrink to fit the panel's width, down to 60%; past that it scrolls.
+  const room = Math.max(200, $('#graph').clientWidth - 20);
+  const scale = Math.max(0.6, Math.min(1, room / (width + 4)));
+  svg.setAttribute('viewBox', `0 0 ${width + 4} ${height + 4}`);
+  svg.setAttribute('width', Math.round((width + 4) * scale));
+  svg.setAttribute('height', Math.round((height + 4) * scale));
   svg.replaceChildren(defs, ...edges, ...nodes);
 }
 
@@ -444,6 +452,12 @@ document.addEventListener('keydown', (e) => {
   }
 });
 document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && refresh());
+
+let resizeTimer = null;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => ui.view === 'graph' && render(true), 150);
+});
 
 if (bridge.theme === 'dark') document.documentElement.dataset.theme = 'dark';
 bridge.onNavigated?.(restart);

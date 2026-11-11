@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Store promo tile</title>
+<style>
+  /* Promo tiles: ?size=small (440x280) or ?size=marquee (1400x560). Same dark ground and node
+     colors as the icon, so the listing reads as one thing. */
+  :root { --bg: #181c26; --ink: #eef1f6; --muted: #a3acbb; --state: #ffc440; --computed: #78d2ff; --edge: #78d2ff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  body { background: var(--bg); color: var(--ink); font-family: Inter, system-ui, sans-serif; display: grid; }
+  .small { grid-template-columns: 1fr; place-items: center; text-align: center; padding: 24px; }
+  .small .mark { width: 92px; height: 92px; }
+  .small h1 { font: 700 34px/1.05 Inter, sans-serif; letter-spacing: -0.02em; margin: 18px 0 8px; }
+  .small p { margin: 0; font-size: 15px; color: var(--muted); }
+  .marquee { grid-template-columns: 1fr 1fr; align-items: center; padding: 0 90px; gap: 60px; }
+  .marquee h1 { font: 700 72px/1.02 Inter, sans-serif; letter-spacing: -0.03em; margin: 0 0 20px; }
+  .marquee p { margin: 0; font-size: 26px; line-height: 1.35; color: var(--muted); max-width: 30ch; }
+  .marquee p b { color: var(--ink); font-weight: 600; }
+  .marquee svg { width: 100%; height: auto; }
+  .tag { display: inline-block; margin-bottom: 26px; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--computed); font-weight: 600; }
+</style>
+</head>
+<body>
+<script>
+  const size = new URLSearchParams(location.search).get('size') ?? 'small';
+  document.body.className = size;
+  const icon = '<img class="mark" src="/extension/icons/icon-128.png" alt="">';
+  if (size === 'small') {
+    document.body.innerHTML = `${icon}<h1>Signals Inspector</h1><p>DevTools for TC39 Signals</p>`;
+  } else {
+    // A small signal graph: two states feed a computed, which feeds two more.
+    const node = (x, y, w, label, kind) => {
+      const color = kind === 'state' ? 'var(--state)' : kind === 'watcher' ? '#c3a6ff' : 'var(--computed)';
+      const r = kind === 'state' ? 4 : kind === 'watcher' ? 4 : 26;
+      return `<rect x="${x}" y="${y}" width="${w}" height="52" rx="${r}" fill="#20263a" stroke="${color}" stroke-width="3"/>
+        <text x="${x + 20}" y="${y + 33}" fill="#eef1f6" font-family="Inter" font-size="20" font-weight="600">${label}</text>`;
+    };
+    const edge = (x1, y1, x2, y2, hot) => `<path d="M${x1},${y1} C${(x1 + x2) / 2},${y1} ${(x1 + x2) / 2},${y2} ${x2},${y2}" fill="none" stroke="${hot ? '#ff6b5b' : '#5a6478'}" stroke-width="${hot ? 4 : 3}"/>`;
+    const graph = `<svg viewBox="-6 -6 574 342" role="img" aria-label="A signal graph">
+      ${edge(150, 60, 210, 165, true)}${edge(150, 270, 210, 165, false)}
+      ${edge(370, 165, 410, 80, true)}${edge(370, 165, 410, 250, false)}
+      ${node(0, 34, 150, 'price', 'state')}${node(0, 244, 150, 'qty', 'state')}
+      ${node(210, 139, 160, 'subtotal', 'computed')}
+      ${node(410, 54, 150, 'tax', 'computed')}${node(410, 224, 150, 'total', 'computed')}
+      <circle cx="180" cy="112" r="9" fill="#ff6b5b"/>
+    </svg>`;
+    document.body.innerHTML = `<div><span class="tag">For the TC39 Signals proposal</span><h1>Signals Inspector</h1><p>See every <b>State</b> and <b>Computed</b> on the page, every write, and <b>why each one re-ran</b>. Works with any framework.</p></div>${graph}`;
+  }
+</script>
+</body>
+</html>

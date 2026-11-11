@@ -11,7 +11,8 @@
     "demo": "node scripts/serve.js",
     "build:playground": "node scripts/build-playground.js",
     "test:playground": "node test/playground.mjs",
-    "test:together": "node test/together.mjs"
+    "test:together": "node test/together.mjs",
+    "shots": "node store/shoot.mjs"
   },
   "keywords": [],
   "author": "",

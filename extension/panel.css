@@ -70,6 +70,8 @@ button[aria-pressed="true"] { background: var(--select); }
 .spacer { flex: 1; }
 
 main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 36%); min-height: 0; }
+body.wide main { grid-template-columns: minmax(0, 1fr); }
+body.wide #detail { display: none; }
 #views { min-height: 0; overflow: hidden; }
 .view { height: 100%; overflow: auto; }
 #detail { border-left: 1px solid var(--line); overflow: auto; padding: 10px 12px; min-height: 0; }

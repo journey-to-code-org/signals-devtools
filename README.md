@@ -36,7 +36,7 @@ npm run build        # bundles the page hook into extension/hook.js, zips dist/
 npm run demo         # http://127.0.0.1:4173/demo/
 ```
 
-Load `extension/` as an unpacked extension (Chrome or Edge: `chrome://extensions`, Developer mode, Load unpacked; Firefox 128+: `about:debugging`, Load Temporary Add-on, pick `extension/manifest.json`). Open the demo, open DevTools, and pick the **Signals** panel.
+Load `extension/` as an unpacked extension (Chrome or Edge: `chrome://extensions`, Developer mode, Load unpacked; Firefox 140+: `about:debugging`, Load Temporary Add-on, pick `extension/manifest.json`). Open the demo, open DevTools, and pick the **Signals** panel.
 
 ## Playground
 
@@ -47,6 +47,10 @@ npm run build:playground   # dist/playground/index.html, one self-contained file
 ```
 
 The `Playground` workflow deploys it to GitHub Pages on every push to `main`.
+
+## Releasing
+
+`npm run build` writes `dist/signals-inspector-<version>.zip`, the one package for the Chrome Web Store, Edge Add-ons and addons.mozilla.org, and `dist/signals-inspector-<version>-source.zip` for Firefox's source review ([BUILDING.md](BUILDING.md) is what its reviewers follow). Store text, permission justifications and reviewer notes are in [store/listing.md](store/listing.md); `npm run shots` remakes the images in `store/images/`. Bump the version in both `package.json` and `extension/manifest.json`; the build refuses to run if they differ. [PRIVACY.md](PRIVACY.md) is the privacy policy the listings link to.
 
 ## Tests
 
@@ -64,6 +68,7 @@ npm run test:playground  # runs every playground example in Chromium (build it f
 - `src/hook.js`: the content script entry, bundled with the polyfill into `extension/hook.js`.
 - `extension/`: the manifest, the DevTools panel (`panel.*`, `model.js`) and the options page.
 - `demo/`: a page that uses only `globalThis.Signal`.
+- `store/`: listing text, store images and the script that makes them.
 - `playground/`: the playground (`main.js`, `examples.js`), built by `scripts/build-playground.js`.
 
 ## Status
