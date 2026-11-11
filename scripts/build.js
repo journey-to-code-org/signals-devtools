@@ -34,7 +34,7 @@ pack(`dist/signals-inspector-${version}.zip`, 'extension/', filesIn('extension')
 // The source as committed (git's own list of tracked files), for reviewers who rebuild it.
 let tracked = null;
 try {
-  tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
+  tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split('\0').filter(Boolean);
 } catch {
   console.log('No git here: skipped the source zip.');
 }
